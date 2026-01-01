@@ -22,7 +22,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { logout } from '@/lib/auth/authUtils';
+import { logout, getUser } from '@/lib/auth/authUtils';
+import { useState, useEffect } from 'react';
 
 export const drawerWidth = 220;
 
@@ -43,6 +44,21 @@ const secondaryMenuItems = [
 
 export default function SideMenu() {
   const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = getUser();
+    setUser(userData);
+  }, []);
+
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    const names = name.split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   return (
     <Box
@@ -67,14 +83,14 @@ export default function SideMenu() {
         </Typography>
         <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mt: 1 }}>
           <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
-            GL
+            {user?.name ? getInitials(user.name) : 'U'}
           </Avatar>
           <Box>
             <Typography variant="body2" fontWeight={600}>
-              Gwen Lam
+              {user?.name || 'User'}
             </Typography>
             <Typography variant="caption" color="primary" sx={{ fontSize: '0.7rem' }}>
-              ST Comp Holdings Sdn Bhd
+              {user?.email || 'email@example.com'}
             </Typography>
           </Box>
         </Stack>
