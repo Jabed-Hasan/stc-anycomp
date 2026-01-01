@@ -10,20 +10,15 @@ const theme = createTheme({
     text: {
       primary: '#222222',
     },
-  },
-  typography: {
-    fontFamily: 'var(--font-red-hat-display), Red Hat Display, Proxima Nova, sans-serif',
-    allVariants: {
-      color: '#222222',
+    background: {
+      default: '#ffffff',
+      paper: '#ffffff',
     },
   },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          color: '#222222',
-        },
-      },
+  typography: {
+    fontFamily: 'Red Hat Display, Proxima Nova, sans-serif',
+    allVariants: {
+      color: '#222222',
     },
   },
 });

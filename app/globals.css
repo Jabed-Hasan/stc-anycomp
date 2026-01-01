@@ -1,29 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-  /* Fonts */
   --font-family-sans: 'Red Hat Display', 'Proxima Nova', sans-serif;
-  
-  /* Colors */
   --color-primary: #222222;
   --color-background: #ffffff;
   --color-foreground: #222222;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #222222;
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
   color: #222222;
   font-family: 'Red Hat Display', 'Proxima Nova', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove any gaps */
+nav, main, aside, div {
+  margin: 0;
+}
+
+#__next {
+  min-height: 100vh;
 }
