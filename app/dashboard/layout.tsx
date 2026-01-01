@@ -1,7 +1,7 @@
 import AuthGuard from '@/components/auth/AuthGuard';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 
-export default function SpecialistsLayout({
+export default function DashboardLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;

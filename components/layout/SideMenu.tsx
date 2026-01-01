@@ -19,8 +19,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { logout } from '@/lib/auth/authUtils';
 
 export const drawerWidth = 220;
 
@@ -150,6 +152,26 @@ export default function SideMenu() {
             </ListItemButton>
           </ListItem>
         ))}
+        
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={logout}
+            sx={{ 
+              borderRadius: 1,
+              '&:hover': {
+                bgcolor: '#ffebee',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: '#d32f2f' }}>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Logout" 
+              primaryTypographyProps={{ fontSize: '0.875rem', color: '#d32f2f' }}
+            />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
