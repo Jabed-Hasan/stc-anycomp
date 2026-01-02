@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -42,7 +43,12 @@ const secondaryMenuItems = [
   { text: 'Settings', icon: <SettingsIcon />, href: '/settings' },
 ];
 
-export default function SideMenu() {
+interface SideMenuProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export default function SideMenu({ mobileOpen = false, onMobileClose }: SideMenuProps) {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
 
@@ -60,20 +66,18 @@ export default function SideMenu() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  return (
+  const handleLinkClick = () => {
+    if (onMobileClose) {
+      onMobileClose();
+    }
+  };
+
+  const drawerContent = (
     <Box
-      component="nav"
       sx={{
-        width: drawerWidth,
-        minWidth: drawerWidth,
-        flexShrink: 0,
-        height: '100vh',
-        position: 'sticky',
-        top: 0,
-        backgroundColor: '#ffffff',
-        borderRight: '1px solid rgba(0, 0, 0, 0.12)',
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
         overflowY: 'auto',
       }}
     >
@@ -113,6 +117,7 @@ export default function SideMenu() {
                 component={Link}
                 href={item.href}
                 selected={isActive}
+                onClick={handleLinkClick}
                 sx={{
                   borderRadius: 1,
                   '&:hover': {
@@ -156,6 +161,7 @@ export default function SideMenu() {
             <ListItemButton
               component={Link}
               href={item.href}
+              onClick={handleLinkClick}
               sx={{ borderRadius: 1 }}
             >
               <ListItemIcon sx={{ minWidth: 36 }}>
@@ -190,5 +196,47 @@ export default function SideMenu() {
         </ListItem>
       </List>
     </Box>
+  );
+
+  return (
+    <>
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onMobileClose}
+        ModalProps={{
+          keepMounted: true, // Better mobile performance
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: drawerWidth,
+            backgroundColor: '#ffffff',
+            borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+
+      {/* Desktop Permanent Sidebar */}
+      <Box
+        component="nav"
+        sx={{
+          width: drawerWidth,
+          minWidth: drawerWidth,
+          flexShrink: 0,
+          height: '100vh',
+          position: 'sticky',
+          top: 0,
+          display: { xs: 'none', md: 'flex' },
+          flexDirection: 'column',
+        }}
+      >
+        {drawerContent}
+      </Box>
+    </>
   );
 }

@@ -2,35 +2,41 @@
 
 import { Chip } from '@mui/material';
 
-type ApprovalStatus = 'Approved' | 'Under Review' | 'Rejected';
+type ApprovalStatus = 'approved' | 'under_review' | 'rejected' | 'pending' | 'Approved' | 'Under Review' | 'Rejected';
 type PublishStatus = 'Published' | 'Not Published';
 
 interface StatusBadgeProps {
-  status: ApprovalStatus | PublishStatus;
+  status: ApprovalStatus | PublishStatus | string;
   type: 'approval' | 'publish';
 }
 
 export default function StatusBadge({ status, type }: StatusBadgeProps) {
+  // Normalize status for consistency
+  const normalizedStatus = typeof status === 'string' ? status.toLowerCase() : status;
+
   const getColor = () => {
     if (type === 'approval') {
-      switch (status) {
-        case 'Approved':
-          return { bg: '#d4edda', color: '#155724' };
-        case 'Under Review':
-          return { bg: '#d1ecf1', color: '#0c5460' };
-        case 'Rejected':
-          return { bg: '#f8d7da', color: '#721c24' };
+      switch (normalizedStatus) {
+        case 'approved':
+          return { bg: '#d4edda', color: '#155724', label: 'Approved' };
+        case 'under_review':
+        case 'under review':
+          return { bg: '#d1ecf1', color: '#0c5460', label: 'Under Review' };
+        case 'rejected':
+          return { bg: '#f8d7da', color: '#721c24', label: 'Rejected' };
+        case 'pending':
+          return { bg: '#fff3cd', color: '#856404', label: 'Pending' };
         default:
-          return { bg: '#e2e3e5', color: '#383d41' };
+          return { bg: '#e2e3e5', color: '#383d41', label: status };
       }
     } else {
-      switch (status) {
-        case 'Published':
-          return { bg: '#28a745', color: '#ffffff' };
-        case 'Not Published':
-          return { bg: '#dc3545', color: '#ffffff' };
+      switch (normalizedStatus) {
+        case 'published':
+          return { bg: '#28a745', color: '#ffffff', label: 'Published' };
+        case 'not published':
+          return { bg: '#dc3545', color: '#ffffff', label: 'Not Published' };
         default:
-          return { bg: '#6c757d', color: '#ffffff' };
+          return { bg: '#6c757d', color: '#ffffff', label: status };
       }
     }
   };
@@ -39,7 +45,7 @@ export default function StatusBadge({ status, type }: StatusBadgeProps) {
 
   return (
     <Chip
-      label={status}
+      label={colors.label}
       size="small"
       sx={{
         bgcolor: colors.bg,
