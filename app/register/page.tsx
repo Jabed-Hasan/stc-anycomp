@@ -52,7 +52,7 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/v1/users', {
+      const response = await fetch('https://stc-supabase.vercel.app/api/v1/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,46 +112,40 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Full Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  autoComplete="name"
-                />
-              </Grid>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField
+                fullWidth
+                label="Full Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                autoComplete="name"
+              />
 
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  autoComplete="email"
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label="Email Address"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+              />
 
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  required
-                  placeholder="+60123456789"
-                  autoComplete="tel"
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label="Phone Number"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                required
+                placeholder="+60123456789"
+                autoComplete="tel"
+              />
 
-              <Grid item xs={12}>
+              <Box>
                 <TextField
                   fullWidth
                   label="Password"
@@ -171,11 +165,11 @@ export default function RegisterPage() {
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
-                    ),
+                    )
                   }}
                 />
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
             <Button
               type="submit"
@@ -219,5 +213,8 @@ export default function RegisterPage() {
         </Paper>
       </Container>
     </Box>
+              
   );
+
 }
+

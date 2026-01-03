@@ -21,6 +21,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { fetchPublishedSpecialists } from '@/lib/redux/slices/specialistsSlice';
+import { getUser } from '@/lib/auth/authUtils';
 
 export default function RegisterCompanyPage() {
   const router = useRouter();
@@ -64,21 +65,31 @@ export default function RegisterCompanyPage() {
     if (e.target.value !== 'Sort by') setPriceFilter('Price');
   };
 
+  const handleProfileClick = () => {
+    const user = getUser();
+    if (user?.role === 'ADMIN') {
+      router.push('/admin/specialists');
+    } else if (user?.role === 'PROVIDER') {
+      router.push('/specialists');
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: '#fff', minHeight: '100vh', color: '#111' }}>
       
-      {/* --- HEADER (Use XL container for more space in Navbar) --- */}
+      {/* --- HEADER --- */}
       <Box sx={{ borderBottom: '1px solid #F3F4F6', py: 1.5, bgcolor: 'white', position: 'sticky', top: 0, zIndex: 10 }}>
-        <Container maxWidth="xl">
+        {/* Changed to "lg" to match body width and create side gaps */}
+        <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 50 }}>
             
             {/* 1. Logo */}
-            <Typography variant="h6" fontWeight={800} sx={{ letterSpacing: 0.5, color: '#111', mr: 4 }}>
+            <Typography variant="h6" fontWeight={800} sx={{ letterSpacing: 0.5, color: '#111', mr: 2 }}>
               ANYCOMP
             </Typography>
 
-            {/* 2. Nav Links (Center - Flexible Space) */}
-            <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 3, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+            {/* 2. Nav Links (Center) */}
+            <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 4, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
               {['Register a company', 'Appoint a Company Secretary', 'Company Secretarial Services', 'How Anycomp Works'].map((text) => (
                 <Typography 
                   key={text} 
@@ -88,7 +99,7 @@ export default function RegisterCompanyPage() {
                     cursor: 'pointer', 
                     color: '#4B5563',
                     fontSize: '0.85rem',
-                    whiteSpace: 'nowrap', // Prevent wrapping
+                    whiteSpace: 'nowrap',
                     '&:hover': { color: '#111' } 
                   }}
                 >
@@ -97,9 +108,9 @@ export default function RegisterCompanyPage() {
               ))}
             </Box>
 
-            {/* 3. Right Actions (Search + Icons) */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 4 }}>
-               {/* Compact Search Bar */}
+            {/* 3. Right Actions */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
+               {/* Search Bar */}
                <Box sx={{ 
                  display: { xs: 'none', md: 'flex' }, 
                  alignItems: 'center', 
@@ -134,14 +145,16 @@ export default function RegisterCompanyPage() {
                     <Notifications sx={{ color: '#4B5563', fontSize: 20 }} />
                   </Badge>
                 </IconButton>
-                <Avatar sx={{ width: 28, height: 28, bgcolor: '#eee' }} />
+                <IconButton size="small" onClick={handleProfileClick}>
+                  <Avatar sx={{ width: 28, height: 28, bgcolor: '#eee', cursor: 'pointer' }} />
+                </IconButton>
               </Box>
             </Box>
           </Box>
         </Container>
       </Box>
 
-      {/* --- MAIN CONTENT (Use LG container for side gaps) --- */}
+      {/* --- MAIN CONTENT --- */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ display: 'flex', gap: 1, mb: 1, color: '#6B7280', fontSize: '0.75rem' }}>
              <span>Home</span> / <span>Specialists</span> / <span style={{ color: '#111', fontWeight: 600 }}>Register a New Company</span>

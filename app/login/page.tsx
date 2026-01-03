@@ -30,7 +30,22 @@ export default function LoginPage() {
   useEffect(() => {
     // Redirect if already logged in
     if (isAuthenticated()) {
-      router.push('/specialists');
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        
+        // Check if user has PROVIDER or ADMIN role
+        if (user.role === 'ADMIN') {
+          router.push('/admin/specialists');
+        } else if (user.role === 'PROVIDER') {
+          router.push('/specialists');
+        } else {
+          // No valid role, redirect to pending approval
+          router.push('/pending-approval');
+        }
+      } else {
+        router.push('/pending-approval');
+      }
     }
   }, [router]);
 
@@ -48,7 +63,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/v1/auth/login', {
+      const response = await fetch('https://stc-supabase.vercel.app/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,12 +74,26 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Store token in localStorage
+        // Store tokens in localStorage
         localStorage.setItem('accessToken', data.data.accessToken);
+        if (data.data.refreshToken) {
+          localStorage.setItem('refreshToken', data.data.refreshToken);
+        }
         localStorage.setItem('user', JSON.stringify(data.data));
         
-        // Redirect to dashboard
-        router.push('/specialists');
+        // Check if user has PROVIDER or ADMIN role
+        const userRole = data.data.role;
+        
+        if (userRole === 'ADMIN') {
+          // Admin role, redirect to admin dashboard
+          router.push('/admin/specialists');
+        } else if (userRole === 'PROVIDER') {
+          // Provider role, redirect to provider dashboard
+          router.push('/specialists');
+        } else {
+          // No valid role (USER or other), redirect to pending approval
+          router.push('/pending-approval');
+        }
       } else {
         setError(data.message || 'Login failed');
       }
@@ -161,7 +190,7 @@ export default function LoginPage() {
 
           <Box sx={{ mt: 3, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 href="/register"
                 sx={{

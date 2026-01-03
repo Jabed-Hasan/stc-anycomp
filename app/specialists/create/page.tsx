@@ -276,13 +276,13 @@ export default function CreateSpecialistPage() {
 
             {/* 5. Company Secretary Section */}
             <Box sx={{ mb: 4 }}>
-               <Grid container spacing={2}>
-                  {/* Profile Part */}
-                  <Grid item xs={12} md={7}>
-                    <Typography variant="h6" fontWeight={700} gutterBottom>Company Secretary</Typography>
-                    <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                       <Avatar sx={{ width: 56, height: 56, bgcolor: '#006C70' }}>GL</Avatar>
-                       <Box>
+              <Typography variant="h6" fontWeight={700} gutterBottom sx={{ mb: 3 }}>Company Secretary</Typography>
+               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '7fr 5fr' }, gap: 3 }}>
+                  {/* Profile Part - Left */}
+                  <Box>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                       <Avatar sx={{ width: 80, height: 80, bgcolor: '#006C70' }}>GL</Avatar>
+                       <Box sx={{ flex: 1 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                              <Typography variant="subtitle1" fontWeight={700}>Grace Lam</Typography>
                              <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#E0F2F1', px: 0.8, py: 0.2, borderRadius: 1 }}>
@@ -294,27 +294,63 @@ export default function CreateSpecialistPage() {
                           <Button 
                              variant="contained" 
                              size="small"
-                             sx={{ mt: 1, bgcolor: '#111827', textTransform: 'none', fontSize: '0.7rem', py: 0.2, height: 24, minWidth: 80 }}
+                             sx={{ mt: 1, bgcolor: '#111827', textTransform: 'none', fontSize: '0.7rem', py: 0.5, px: 2 }}
                           >
                              View Profile
                           </Button>
                        </Box>
                     </Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontSize: '0.85rem', lineHeight: 1.6 }}>
-                       A company secretarial service founded by Grace, who believes that every company deserves clarity.
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontSize: '0.875rem', lineHeight: 1.6 }}>
+                       A company secretarial service founded by Grace, who believes that every company deserves clarity, confidence, and care in their compliance journey. Inspired by the spirit of entrepreneurship, Aida treats every client's business as if it were her own — attentive to detail, committed to deadlines, and focused on growth. Step into a partnership built on trust, transparency, and professional excellence. Whether you're just starting out or managing a growing company, Aida is here to make your corporate governance smooth, secure, and stress-free. Your company's peace of mind starts here
                     </Typography>
-                  </Grid>
+                  </Box>
 
-                  {/* Certifications Part */}
-                  <Grid item xs={12} md={5}>
+                  {/* Certifications Part - Right */}
+                  <Box>
                      <Typography variant="subtitle2" fontWeight={600} gutterBottom>Certified Company Secretary</Typography>
-                     <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                        <Box sx={{ width: 50, height: 25, bgcolor: '#f0f0f0', borderRadius: 0.5 }} />
-                        <Box sx={{ width: 50, height: 25, bgcolor: '#f0f0f0', borderRadius: 0.5 }} />
-                        <Box sx={{ width: 30, height: 25, bgcolor: '#f0f0f0', borderRadius: 0.5 }} />
+                     <Box sx={{ display: 'flex', gap: 1.5, mt: 2, flexWrap: 'wrap' }}>
+                        <Box 
+                          component="img"
+                          src="/placeholder-cert-1.png"
+                          alt="SSM Certification"
+                          sx={{ 
+                            width: 80, 
+                            height: 50, 
+                            bgcolor: '#f0f0f0', 
+                            borderRadius: 1,
+                            objectFit: 'contain',
+                            border: '1px solid #e0e0e0'
+                          }} 
+                        />
+                        <Box 
+                          component="img"
+                          src="/placeholder-cert-2.png"
+                          alt="MAICSA Certification"
+                          sx={{ 
+                            width: 80, 
+                            height: 50, 
+                            bgcolor: '#f0f0f0', 
+                            borderRadius: 1,
+                            objectFit: 'contain',
+                            border: '1px solid #e0e0e0'
+                          }} 
+                        />
+                        <Box 
+                          component="img"
+                          src="/placeholder-cert-3.png"
+                          alt="Additional Certification"
+                          sx={{ 
+                            width: 50, 
+                            height: 50, 
+                            bgcolor: '#f0f0f0', 
+                            borderRadius: 1,
+                            objectFit: 'contain',
+                            border: '1px solid #e0e0e0'
+                          }}
+                        />
                      </Box>
-                  </Grid>
-               </Grid>
+                  </Box>
+               </Box>
             </Box>
           </Box>
 

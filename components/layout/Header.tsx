@@ -19,6 +19,11 @@ export default function Header() {
         justifyContent: 'flex-end',
         pt: 1.5,
         px: 2,
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        bgcolor: 'white',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}
     >
       <Stack direction="row" spacing={1}>

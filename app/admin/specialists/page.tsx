@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -16,12 +17,16 @@ import {
   TableRow,
   Checkbox,
   Paper,
-  Pagination,
   CircularProgress,
   Alert,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
-import { Search, Add, FileDownload } from '@mui/icons-material';
+import { Search, FileDownload } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
@@ -30,12 +35,15 @@ import {
   fetchAllSpecialistsAdmin,
   fetchDraftsAdmin,
   fetchPublishedAdmin,
+  approveSpecialist,
+  rejectSpecialist,
   deleteSpecialist,
+  submitForReview,
 } from '@/lib/redux/slices/specialistsSlice';
 import StatusBadge from '@/components/ui/StatusBadge';
 import ActionMenu from '@/components/ui/ActionMenu';
 
-export default function SpecialistsPage() {
+export default function AdminSpecialistsPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { specialists, loading, error, meta } = useAppSelector((state) => state.specialists);
@@ -45,6 +53,7 @@ export default function SpecialistsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
+  const [rejectDialog, setRejectDialog] = useState({ open: false, id: '', reason: '' });
 
   // Check token on mount
   useEffect(() => {
@@ -103,6 +112,41 @@ export default function SpecialistsPage() {
     );
   };
 
+  const handleApprove = async (id: string) => {
+    try {
+      await dispatch(approveSpecialist(id)).unwrap();
+      setSnackbar({ open: true, message: 'Specialist approved successfully!', severity: 'success' });
+      fetchData();
+    } catch (err: any) {
+      setSnackbar({ open: true, message: err || 'Failed to approve specialist', severity: 'error' });
+    }
+  };
+
+  const handleSubmitReview = async (id: string) => {
+    try {
+      await dispatch(submitForReview(id)).unwrap();
+      setSnackbar({ open: true, message: 'Specialist submitted for review successfully!', severity: 'success' });
+      fetchData();
+    } catch (err: any) {
+      setSnackbar({ open: true, message: err || 'Failed to submit for review', severity: 'error' });
+    }
+  };
+
+  const handleRejectOpen = (id: string) => {
+    setRejectDialog({ open: true, id, reason: '' });
+  };
+
+  const handleRejectConfirm = async () => {
+    try {
+      await dispatch(rejectSpecialist({ id: rejectDialog.id, reason: rejectDialog.reason })).unwrap();
+      setSnackbar({ open: true, message: 'Specialist rejected', severity: 'success' });
+      setRejectDialog({ open: false, id: '', reason: '' });
+      fetchData();
+    } catch (err: any) {
+      setSnackbar({ open: true, message: err || 'Failed to reject specialist', severity: 'error' });
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this specialist?')) {
       try {
@@ -121,10 +165,10 @@ export default function SpecialistsPage() {
   };
 
   return (
-      <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       {/* Breadcrumb */}
       <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-        Dashboard
+        Admin Dashboard
       </Typography>
 
       {/* Page Title */}
@@ -136,7 +180,7 @@ export default function SpecialistsPage() {
           fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.5rem' }
         }}
       >
-        Services
+        Services Management
       </Typography>
 
       {/* Subtitle */}
@@ -149,10 +193,10 @@ export default function SpecialistsPage() {
           fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }
         }}
       >
-        Specialists
+        All Specialists
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Create and publish your services for Client's & Companies
+        Manage and review all specialist services from providers
       </Typography>
 
       {/* Tabs */}
@@ -195,23 +239,6 @@ export default function SpecialistsPage() {
         }}>
           <Button
             variant="contained"
-            startIcon={<Add />}
-            onClick={() => router.push('/specialists/create')}
-            fullWidth
-            sx={{
-              bgcolor: '#002F70',
-              textTransform: 'none',
-              fontWeight: 600,
-              width: { xs: '100%', sm: 'auto' },
-              '&:hover': {
-                bgcolor: '#001f4d',
-              },
-            }}
-          >
-            Create
-          </Button>
-          <Button
-            variant="contained"
             startIcon={<FileDownload />}
             fullWidth
             sx={{
@@ -252,7 +279,7 @@ export default function SpecialistsPage() {
             sx={{ 
               border: '1px solid', 
               borderColor: 'divider',
-              overflowX: 'auto' // Enable horizontal scroll on mobile
+              overflowX: 'auto'
             }}
           >
             <Table>
@@ -314,6 +341,24 @@ export default function SpecialistsPage() {
                         <ActionMenu
                           onEdit={() => router.push(`/specialists/edit/${service.id}`)}
                           onDelete={() => handleDelete(service.id)}
+                          onSubmitReview={
+                            service.verification_status === 'pending'
+                              ? () => handleSubmitReview(service.id)
+                              : undefined
+                          }
+                          onApprove={
+                            (service.verification_status === 'under_review' || 
+                             service.verification_status === 'pending' ||
+                             service.verification_status === 'rejected')
+                              ? () => handleApprove(service.id) 
+                              : undefined
+                          }
+                          onReject={
+                            (service.verification_status === 'under_review' || 
+                             service.verification_status === 'pending')
+                              ? () => handleRejectOpen(service.id) 
+                              : undefined
+                          }
                         />
                       </TableCell>
                     </TableRow>
@@ -341,7 +386,6 @@ export default function SpecialistsPage() {
               
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 {Array.from({ length: meta.totalPage || 1 }, (_, i) => i + 1).map((pageNum) => {
-                  // Show first page, last page, current page, and pages around current
                   const showPage = pageNum === 1 || 
                                    pageNum === meta.totalPage || 
                                    Math.abs(pageNum - page) <= 1;
@@ -400,6 +444,36 @@ export default function SpecialistsPage() {
           )}
         </>
       )}
+
+      {/* Reject Dialog */}
+      <Dialog open={rejectDialog.open} onClose={() => setRejectDialog({ open: false, id: '', reason: '' })}>
+        <DialogTitle>Reject Specialist</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            Please provide a reason for rejection:
+          </DialogContentText>
+          <TextField
+            autoFocus
+            fullWidth
+            multiline
+            rows={4}
+            placeholder="Enter rejection reason..."
+            value={rejectDialog.reason}
+            onChange={(e) => setRejectDialog({ ...rejectDialog, reason: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRejectDialog({ open: false, id: '', reason: '' })}>Cancel</Button>
+          <Button 
+            onClick={handleRejectConfirm} 
+            variant="contained" 
+            color="error"
+            disabled={!rejectDialog.reason}
+          >
+            Reject
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Snackbar */}
       <Snackbar

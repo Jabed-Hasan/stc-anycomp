@@ -21,6 +21,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { logout, getUser } from '@/lib/auth/authUtils';
@@ -29,7 +30,7 @@ import { useState, useEffect } from 'react';
 export const drawerWidth = 220;
 
 const mainMenuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard' },
+  { text: 'Registered Company', icon: <DashboardIcon />, href: '/register-company' },
   { text: 'Specialists', icon: <PeopleIcon />, href: '/specialists' },
   { text: 'Clients', icon: <PeopleIcon />, href: '/clients' },
   { text: 'Service Orders', icon: <LocalShippingIcon />, href: '/service-orders' },
@@ -78,7 +79,6 @@ export default function SideMenu({ mobileOpen = false, onMobileClose }: SideMenu
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        overflowY: 'auto',
       }}
     >
       <Box sx={{ p: 2 }}>
@@ -152,6 +152,50 @@ export default function SideMenu({ mobileOpen = false, onMobileClose }: SideMenu
       </List>
 
       <Box sx={{ flexGrow: 1 }} />
+
+      {/* Admin-only User Management */}
+      {user?.role === 'ADMIN' && (
+        <>
+          <Divider />
+          <List sx={{ px: 1, py: 1 }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                component={Link}
+                href="/admin/users"
+                selected={pathname === '/admin/users'}
+                onClick={handleLinkClick}
+                sx={{
+                  borderRadius: 1,
+                  '&:hover': {
+                    backgroundColor: '#e8eef7',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: '#002F70',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#001f4d',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
+                    '& .MuiListItemText-primary': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 36, color: pathname === '/admin/users' ? 'white' : 'text.secondary' }}>
+                  <ManageAccountsIcon />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="User Management" 
+                  primaryTypographyProps={{ fontSize: '0.875rem' }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </>
+      )}
 
       <Divider />
 

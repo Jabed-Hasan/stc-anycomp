@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createSlice, createAsyncThunk, } from '@reduxjs/toolkit';
 
 interface CompanyType {
   name: string;
@@ -85,7 +86,7 @@ export const createSpecialist = createAsyncThunk(
   async (formData: FormData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:5001/api/v1/specialists', {
+      const response = await fetch('https://stc-supabase.vercel.app/api/v1/specialists', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -117,7 +118,7 @@ export const fetchSpecialists = createAsyncThunk(
       if (params.searchTerm) queryParams.append('searchTerm', params.searchTerm);
 
       const response = await fetch(
-        `http://localhost:5001/api/v1/specialists/live?${queryParams.toString()}`
+        `https://stc-supabase.vercel.app/api/v1/specialists/live?${queryParams.toString()}`
       );
 
       const data = await response.json();
@@ -138,7 +139,7 @@ export const fetchSpecialistById = createAsyncThunk(
   'specialists/fetchById',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}`);
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}`);
       const data = await response.json();
 
       if (!data.success) {
@@ -158,7 +159,7 @@ export const updateSpecialist = createAsyncThunk(
   async ({ id, formData }: { id: string; formData: FormData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -185,7 +186,7 @@ export const publishSpecialist = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}/publish`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}/publish`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +214,7 @@ export const deleteSpecialist = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -253,7 +254,7 @@ export const fetchAllSpecialistsAdmin = createAsyncThunk(
       if (params.verification_status) queryParams.append('verification_status', params.verification_status);
 
       const response = await fetch(
-        `http://localhost:5001/api/v1/specialists/admin/all?${queryParams.toString()}`,
+        `https://stc-supabase.vercel.app/api/v1/specialists/admin/all?${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -285,7 +286,7 @@ export const fetchDraftsAdmin = createAsyncThunk(
       if (params.limit) queryParams.append('limit', params.limit.toString());
 
       const response = await fetch(
-        `http://localhost:5001/api/v1/specialists/admin/all?is_draft=true&${queryParams.toString()}`,
+        `https://stc-supabase.vercel.app/api/v1/specialists/admin/all?is_draft=true&${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -318,7 +319,7 @@ export const fetchPublishedSpecialists = createAsyncThunk(
       if (params.category) queryParams.append('category', params.category);
 
       const response = await fetch(
-        `http://localhost:5001/api/v1/specialists/live?${queryParams.toString()}`
+        `https://stc-supabase.vercel.app/api/v1/specialists/live?${queryParams.toString()}`
       );
 
       const data = await response.json();
@@ -345,7 +346,7 @@ export const fetchPublishedAdmin = createAsyncThunk(
       if (params.limit) queryParams.append('limit', params.limit.toString());
 
       const response = await fetch(
-        `http://localhost:5001/api/v1/specialists/admin/all?is_draft=false&${queryParams.toString()}`,
+        `https://stc-supabase.vercel.app/api/v1/specialists/admin/all?is_draft=false&${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -372,7 +373,7 @@ export const approveSpecialist = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}/approve`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}/approve`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -398,7 +399,7 @@ export const rejectSpecialist = createAsyncThunk(
   async ({ id, reason }: { id: string; reason: string }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}/reject`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}/reject`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -426,7 +427,7 @@ export const submitForReview = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:5001/api/v1/specialists/${id}/submit-review`, {
+      const response = await fetch(`https://stc-supabase.vercel.app/api/v1/specialists/${id}/submit-review`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
