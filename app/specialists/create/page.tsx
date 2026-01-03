@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -301,7 +302,7 @@ export default function CreateSpecialistPage() {
                        </Box>
                     </Box>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontSize: '0.875rem', lineHeight: 1.6 }}>
-                       A company secretarial service founded by Grace, who believes that every company deserves clarity, confidence, and care in their compliance journey. Inspired by the spirit of entrepreneurship, Aida treats every client's business as if it were her own — attentive to detail, committed to deadlines, and focused on growth. Step into a partnership built on trust, transparency, and professional excellence. Whether you're just starting out or managing a growing company, Aida is here to make your corporate governance smooth, secure, and stress-free. Your company's peace of mind starts here
+                       A company secretarial service founded by Grace, who believes that every company deserves clarity, confidence, and care in their compliance journey. Inspired by the spirit of entrepreneurship, Aida treats every clients business as if it were her own — attentive to detail, committed to deadlines, and focused on growth. Step into a partnership built on trust, transparency, and professional excellence. Whether you are just starting out or managing a growing company, Aida is here to make your corporate governance smooth, secure, and stress-free. Your company's peace of mind starts here
                     </Typography>
                   </Box>
 

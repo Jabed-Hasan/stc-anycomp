@@ -45,6 +45,9 @@ interface User {
 export default function UsersManagementPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [assignLoading, setAssignLoading] = useState(false);
+  const [statusLoading, setStatusLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [createDialog, setCreateDialog] = useState(false);
@@ -93,6 +96,7 @@ export default function UsersManagementPage() {
 
   const handleCreateUser = async () => {
     try {
+      setCreateLoading(true);
       const response = await fetchWithAuth('https://stc-supabase.vercel.app/api/v1/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -111,6 +115,8 @@ export default function UsersManagementPage() {
       }
     } catch (error) {
       setSnackbar({ open: true, message: 'Error creating user', severity: 'error' });
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -118,6 +124,7 @@ export default function UsersManagementPage() {
     if (!selectedUser) return;
 
     try {
+      setAssignLoading(true);
       const endpoint = assignType === 'admin' 
         ? 'https://stc-supabase.vercel.app/api/v1/users/create-admin'
         : 'https://stc-supabase.vercel.app/api/v1/providers/create-provider';
@@ -144,6 +151,8 @@ export default function UsersManagementPage() {
       }
     } catch (error) {
       setSnackbar({ open: true, message: 'Error assigning role', severity: 'error' });
+    } finally {
+      setAssignLoading(false);
     }
   };
 
@@ -165,6 +174,7 @@ export default function UsersManagementPage() {
     if (!selectedUser) return;
 
     try {
+      setStatusLoading(true);
       const response = await fetchWithAuth(
         `https://stc-supabase.vercel.app/api/v1/users/${selectedUser.id}/status`,
         {
@@ -190,6 +200,8 @@ export default function UsersManagementPage() {
       }
     } catch (error) {
       setSnackbar({ open: true, message: 'Error changing user status', severity: 'error' });
+    } finally {
+      setStatusLoading(false);
     }
   };
 
@@ -352,13 +364,14 @@ export default function UsersManagementPage() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCreateDialog(false)}>Cancel</Button>
+          <Button onClick={() => setCreateDialog(false)} disabled={createLoading}>Cancel</Button>
           <Button 
             variant="contained" 
             onClick={handleCreateUser}
-            disabled={!newUser.email || !newUser.password}
+            disabled={!newUser.email || !newUser.password || createLoading}
+            startIcon={createLoading ? <CircularProgress size={16} color="inherit" /> : null}
           >
-            Create User
+            {createLoading ? 'Creating...' : 'Create User'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -375,9 +388,14 @@ export default function UsersManagementPage() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAssignDialog(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleAssignRole}>
-            Confirm
+          <Button onClick={() => setAssignDialog(false)} disabled={assignLoading}>Cancel</Button>
+          <Button 
+            variant="contained" 
+            onClick={handleAssignRole}
+            disabled={assignLoading}
+            startIcon={assignLoading ? <CircularProgress size={16} color="inherit" /> : null}
+          >
+            {assignLoading ? 'Assigning...' : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -405,9 +423,14 @@ export default function UsersManagementPage() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setStatusDialog(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleChangeStatus}>
-            Change Status
+          <Button onClick={() => setStatusDialog(false)} disabled={statusLoading}>Cancel</Button>
+          <Button 
+            variant="contained" 
+            onClick={handleChangeStatus}
+            disabled={statusLoading}
+            startIcon={statusLoading ? <CircularProgress size={16} color="inherit" /> : null}
+          >
+            {statusLoading ? 'Changing...' : 'Change Status'}
           </Button>
         </DialogActions>
       </Dialog>
